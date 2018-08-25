@@ -10,6 +10,8 @@ import ast
 import inspect
 import phylanx.execution_tree
 from phylanx import compiler_state
+from phylanx.core.config import PhylanxSession
+from phylanx.exceptions import RuntimeNotInitializedError
 
 mapped_methods = {
     "add": "__add",
@@ -95,6 +97,10 @@ class PhySL:
     compiler_state = None
 
     def __init__(self, func, tree, kwargs):
+        if not PhylanxSession.is_initialized:
+            raise RuntimeNotInitializedError(
+                "Phylanx decorator is used before calling PhylanxSession.")
+
         self.defined = set()
         self.numpy_aliases = {'numpy'}
         self.wrapped_function = func

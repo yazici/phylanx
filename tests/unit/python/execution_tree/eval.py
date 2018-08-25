@@ -6,8 +6,10 @@
 #  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 import phylanx
-from phylanx import Phylanx
 import numpy as np
+from phylanx import Phylanx, PhylanxSession
+
+PhylanxSession(2)
 
 et = phylanx.execution_tree
 cs = phylanx.compiler_state()
@@ -49,7 +51,7 @@ def fib(n):
 
 
 assert fib.__src__ == \
-    'define$44$0(fib$44$0, n$44$8, if$45$4(__lt$45$7(n$45$7, 2), n$46$15, __add$48$15(fib$48$15(__sub$48$19(n$48$19, 1)), fib$48$28(__sub$48$32(n$48$32, 2)))))' # noqa E501
+    'define$46$0(fib$46$0, n$46$8, if$47$4(__lt$47$7(n$47$7, 2), n$48$15, __add$50$15(fib$50$15(__sub$50$19(n$50$19, 1)), fib$50$28(__sub$50$32(n$50$32, 2)))))' # noqa E501
 assert "[" + fib.__src__ + "]" == str(fib.generate_ast())
 assert fib(10) == 55.0
 
@@ -60,7 +62,7 @@ def pass_str(a):
 
 
 assert pass_str.__src__ == \
-    'define$58$0(pass_str$58$0, a$58$13, a$59$11)'
+    'define$60$0(pass_str$60$0, a$60$13, a$61$11)'
 assert "[" + pass_str.__src__ + "]" == str(pass_str.generate_ast())
 assert "foo" == str(pass_str("foo"))
 

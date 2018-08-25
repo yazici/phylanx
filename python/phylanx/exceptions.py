@@ -15,5 +15,5 @@ class RuntimeNotInitializedError(Exception):
 
 
 class RuntimeAlreadyInitializedError(Exception):
-    """PhylanxSession can initialized only once."""
+    """PhylanxSession may only be initialized once."""
     pass

@@ -6,7 +6,9 @@
 # Fixing #369: Exception getting swallowed
 
 import numpy as np
-from phylanx import Phylanx
+from phylanx import Phylanx, PhylanxSession
+
+PhylanxSession(2)
 
 
 @Phylanx
@@ -22,7 +24,7 @@ try:
 
 except Exception as e:
     expected = \
-        '<unknown>(14, 8): __add:: the dimensions of the ' + \
+        '<unknown>(16, 8): __add:: the dimensions of the ' + \
         'operands do not match: HPX(bad_parameter)'
     assert (str(e) == expected)
     exception_thrown = True

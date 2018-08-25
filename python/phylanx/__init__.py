@@ -4,5 +4,5 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 from .core import *
-from .core.config import *
+from .core.config import PhylanxSession
 from .ast.transducer import Phylanx
