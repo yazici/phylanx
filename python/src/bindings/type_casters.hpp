@@ -408,11 +408,11 @@ namespace pybind11 { namespace detail
             // np.array([0]) is convertible to a scalar value
             if (!is_scalar_instance<result_type>::call(src))
             {
-                if (is_array_instance<result_type>::call(src))
-                {
-                    auto buf = array::ensure(src);
-                    if (!buf) return false;
+                auto buf = array::ensure(src);
+                if (!buf) return false;
 
+                if (is_array_instance<result_type>::call(buf))
+                {
                     auto dims = buf.ndim();
                     if (dims != 0) return false;
 
@@ -447,15 +447,15 @@ namespace pybind11 { namespace detail
 
         bool load1d(handle src, bool convert)
         {
-            if (!convert && !is_array_instance<result_type>::call(src))
-            {
-                return false;
-            }
-
             // Coerce into an array, but don't do type conversion yet; the copy
             // below handles it.
             auto buf = array::ensure(src);
             if (!buf) return false;
+
+            if (!convert && !is_array_instance<result_type>::call(buf))
+            {
+                return false;
+            }
 
             auto dims = buf.ndim();
             if (dims != 1) return false;
@@ -486,15 +486,15 @@ namespace pybind11 { namespace detail
 
         bool load2d(handle src, bool convert)
         {
-            if (!convert && !is_array_instance<result_type>::call(src))
-            {
-                return false;
-            }
-
             // Coerce into an array, but don't do type conversion yet; the copy
             // below handles it.
             auto buf = array::ensure(src);
             if (!buf) return false;
+
+            if (!convert && !is_array_instance<result_type>::call(buf))
+            {
+                return false;
+            }
 
             auto dims = buf.ndim();
             if (dims != 2) return false;
@@ -526,15 +526,15 @@ namespace pybind11 { namespace detail
 #if defined(PHYLANX_HAVE_BLAZE_TENSOR)
         bool load3d(handle src, bool convert)
         {
-            if (!convert && !is_array_instance<result_type>::call(src))
-            {
-                return false;
-            }
-
             // Coerce into an array, but don't do type conversion yet; the copy
             // below handles it.
             auto buf = array::ensure(src);
             if (!buf) return false;
+
+            if (!convert && !is_array_instance<result_type>::call(buf))
+            {
+                return false;
+            }
 
             auto dims = buf.ndim();
             if (dims != 3) return false;
@@ -769,8 +769,11 @@ namespace pybind11 { namespace detail
         {
             if (0 == src->index())      // T
             {
-                return make_caster<result_type>::cast(
-                    src->scalar(), policy, parent);
+                // convert scalars to the corresponding numpy scalar type
+                pybind11::object dtype =
+                    pybind11::dtype::of<typename Type::storage0d_type>().attr(
+                        "type");
+                return dtype(src->scalar());
             }
 
             switch (policy)
